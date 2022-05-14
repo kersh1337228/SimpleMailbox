@@ -11,7 +11,12 @@ const User = new mongoose.Schema({
         type: String,
         unique: false,
         required: true,
-    }
+    },
+    emails: [{
+        type: mongoose.Types.ObjectId,
+        ref: 'Email',
+        default: [],
+    }],
 })
 
 

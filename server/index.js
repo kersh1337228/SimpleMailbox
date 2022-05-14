@@ -1,25 +1,27 @@
 import express from 'express'
 import mongoose from 'mongoose'
-import path from 'path'
 import authRouter from './apps/auth/routes.js'
+import mailRouter from './apps/mail/routers.js'
 
 
-const __dirname = path.resolve()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 5000
 const app = express()
 
 
 // Applying middleware
-app.use(express.static(path.join(__dirname, '../client/static')))
+app.use((request, response, next) => {
+    response.header('Access-Control-Allow-Origin', '*')
+    response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD')
+    response.header('Access-Control-Allow-Headers', 'Content-Type')
+    next()
+})  // CORS
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 
 // Specifying applications urls
-app.get('*', (request, response) => {
-    response.sendFile(path.join(__dirname, '../client/templates/index.html'))
-})
-app.use(authRouter)
+app.use('/auth', authRouter)
+app.use('/mail', mailRouter)
 
 
 const init = async () => {

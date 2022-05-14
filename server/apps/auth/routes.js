@@ -6,12 +6,8 @@ const router = new Router()
 
 
 // Authentication pages
-//// Sign in
-router.get('/login', loginAPIController.get)
-router.post('/login', loginAPIController.post)
-//// Sign up
-router.get('/register', registerAPIController.get)
-router.post('/register', registerAPIController.post)
+router.post('/login', loginAPIController.post)  // Sign in
+router.post('/register', registerAPIController.post)  // Sign up
 
 
 export default router
