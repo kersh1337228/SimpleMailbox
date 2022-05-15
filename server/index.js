@@ -1,5 +1,6 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import cors from 'cors'
 import authRouter from './apps/auth/routes.js'
 import mailRouter from './apps/mail/routers.js'
 
@@ -9,12 +10,7 @@ const app = express()
 
 
 // Applying middleware
-app.use((request, response, next) => {
-    response.header('Access-Control-Allow-Origin', '*')
-    response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD')
-    response.header('Access-Control-Allow-Headers', 'Content-Type')
-    next()
-})  // CORS
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 

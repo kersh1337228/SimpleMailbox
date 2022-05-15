@@ -25,6 +25,8 @@ export default class Login extends React.Component {
             this.setState({errors: response.errors})
         } else {
             localStorage.setItem('token', response.token)
+            localStorage.setItem('username', response.username)
+            window.location.reload()
         }
     }
 

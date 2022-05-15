@@ -2,6 +2,7 @@ import React from 'react'
 import {Route, BrowserRouter, Routes, Navigate} from 'react-router-dom'
 import Login from './auth/Login'
 import Register from './auth/Register'
+import MailList from "./mail/MailList";
 
 
 export default function App() {
@@ -10,7 +11,7 @@ export default function App() {
         return(
             <BrowserRouter>
                 <Routes>
-                    <Route exact path={'/mail/list'} element={<h1>Mail list page</h1>} />
+                    <Route exact path={'/mail/list'} element={<MailList />} />
                     <Route exact path={'/mail/detail/:id'} element={<h1>Mail detail page</h1>} />
                     <Route exact path={'/mail/create'} element={<h1>Mail create page</h1>} />
                     <Route path={'*'} element={<Navigate to={'/mail/list'} />} />

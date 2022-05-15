@@ -1,13 +1,13 @@
 import {Router} from 'express'
-import {loginAPIController, registerAPIController} from './controllers.js'
+import authAPIController from './controllers.js'
 
 
 const router = new Router()
 
 
 // Authentication pages
-router.post('/login', loginAPIController.post)  // Sign in
-router.post('/register', registerAPIController.post)  // Sign up
+router.post('/login', authAPIController.login)  // Sign in
+router.post('/register', authAPIController.register)  // Sign up
 
 
 export default router

@@ -13,9 +13,9 @@ function generateAccessToken(username, id) {
 }
 
 
-export class loginAPIController {
+export default class authAPIController {
     // Trying to get user instance by data sent
-    static async post(request, response) {
+    static async login(request, response) {
         try {
             const {username, password} = request.body
             const user = await User.findOne({username: username})
@@ -34,7 +34,8 @@ export class loginAPIController {
                 })
             }
             return response.status(200).json({
-                token: generateAccessToken(user.username, user._id)
+                token: generateAccessToken(user.username, user._id),
+                username: user.username,
             })
         } catch (error) {
             console.log(error)
@@ -43,12 +44,8 @@ export class loginAPIController {
             })
         }
     }
-}
-
-
-export class registerAPIController {
     // Creating new user instance
-    static async post(request, response) {
+    static async register(request, response) {
         try {
             const {username, password} = request.body
             const user = new User({
