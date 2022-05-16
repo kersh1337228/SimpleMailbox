@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import Email from './models.js'
 import User from '../auth/models.js'
 
@@ -7,6 +8,19 @@ export default class mailApiController {
         try {
             const user = await User.findOne({username: request.user.username})
             response.status(200).json(await user.get_emails())
+        } catch (error) {
+            console.log(error)
+            return response.status(500).json({
+                message: 'Request error'
+            })
+        }
+    }
+
+    static async list_filtered(request, response) {
+        try {
+            const user = await User.findOne({username: request.user.username})
+            const emails = await user.get_emails(request.params.filter)
+            response.status(200).json(emails)
         } catch (error) {
             console.log(error)
             return response.status(500).json({
@@ -76,7 +90,7 @@ export default class mailApiController {
         try {
             const user = await User.findOne({username: request.user.username})
             const email = await Email.findById(request.body._id)
-            if (user._id !== request.body.sender._id) {
+            if (!user._id.equals(new mongoose.Types.ObjectId(request.body.sender._id))) {
                 email.checked = true
                 await email.save()
             }

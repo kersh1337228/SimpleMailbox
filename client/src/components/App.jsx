@@ -2,18 +2,18 @@ import React from 'react'
 import {Route, BrowserRouter, Routes, Navigate} from 'react-router-dom'
 import Login from './auth/Login'
 import Register from './auth/Register'
-import MailList from "./mail/MailList";
+import Account from './auth/Account'
+import MailList from './mail/MailList'
+import './App.css'
 
 
 export default function App() {
-    const isAuthenticated = localStorage.getItem('token')
-    if (isAuthenticated) {
+    if (localStorage.getItem('token')) {
         return(
             <BrowserRouter>
+                <Account />
                 <Routes>
                     <Route exact path={'/mail/list'} element={<MailList />} />
-                    <Route exact path={'/mail/detail/:id'} element={<h1>Mail detail page</h1>} />
-                    <Route exact path={'/mail/create'} element={<h1>Mail create page</h1>} />
                     <Route path={'*'} element={<Navigate to={'/mail/list'} />} />
                 </Routes>
             </BrowserRouter>

@@ -1,5 +1,5 @@
 import React from 'react'
-import './MailCreate.css'
+import './Modal.css'
 
 
 export default class Modal extends React.Component {
@@ -12,7 +12,7 @@ export default class Modal extends React.Component {
     render() {
         return(
             <div className={this.props.active ? 'background active' : 'background'} onClick={() => {
-                this.props.unsetActive()
+                this.props.unsetActive(false)
             }}>
                 <div className={'content'} onClick={(event) => {
                     event.stopPropagation()
