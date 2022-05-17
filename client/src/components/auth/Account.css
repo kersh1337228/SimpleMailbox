@@ -1,5 +1,40 @@
 .account {
     position: absolute;
-    left: 0;
-    top: 0;
+    right: 20px;
+}
+
+.account_nav {
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.account_nav:hover {
+    color: rgb(150, 150, 150);
+}
+
+.account_container {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+.account_delete {
+    color: rgb(170, 0, 0);
+}
+
+.account_delete_solution {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.account_delete_cancel {
+    width: 45%;
+}
+
+.account_delete_confirm {
+    width: 45%;
+    color: rgb(170, 0, 0);
 }

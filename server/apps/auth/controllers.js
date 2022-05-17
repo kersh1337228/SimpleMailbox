@@ -69,4 +69,16 @@ export default class authAPIController {
             }
         }
     }
+    // Deleting current user account
+    static async delete(request, response) {
+        try {
+            await User.findByIdAndDelete(request.user.id)
+            return response.status(200).json('Deleted')
+        } catch (error) {
+            console.log(error.message)
+            return response.status(500).json({
+                message: 'Request error'
+            })
+        }
+    }
 }

@@ -116,28 +116,31 @@ export default class MailList extends React.Component {
     }
 
     async check(letter, callback) {
-        const request = await fetch(`http://localhost:5000/mail/check`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify(letter)
-        })
-        const response = await request.json()
-        if (!request.ok) {
-            if (response === 'TokenError') {
-                localStorage.clear()
-                window.location.reload()
+        if (!letter.checked) {
+            const request = await fetch(`http://localhost:5000/mail/check`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(letter)
+            })
+            const response = await request.json()
+            if (!request.ok) {
+                if (response === 'TokenError') {
+                    localStorage.clear()
+                    window.location.reload()
+                } else {
+                    this.setState({errors: response.errors})
+                }
             } else {
-                this.setState({errors: response.errors})
+                let mail = this.state.mail
+                mail.list[mail.list.indexOf(letter)].checked = true
+                try {mail.selected[mail.selected.indexOf(letter)].checked = true} catch (error) {}
+                this.setState({mail}, callback)
             }
-        } else {
-            let mail = this.state.mail
-            mail.list = response
-            this.setState({mail}, callback)
-        }
+        } else callback()
     }
 
     forward(letter) {
@@ -194,11 +197,11 @@ export default class MailList extends React.Component {
             case 'date':
                 sortCallback = (a, b) => {
                     if (state.sort.invert) {
-                        return new Date(a.sending_time) > new Date(b.sending_time) ?
-                            1 : new Date(a.sending_time) < new Date(b.sending_time) ? -1 : 0
-                    } else {
                         return new Date(a.sending_time) < new Date(b.sending_time) ?
                             1 : new Date(a.sending_time) > new Date(b.sending_time) ? -1 : 0
+                    } else {
+                        return new Date(a.sending_time) > new Date(b.sending_time) ?
+                            1 : new Date(a.sending_time) < new Date(b.sending_time) ? -1 : 0
                     }
                 }
                 break
@@ -278,9 +281,9 @@ export default class MailList extends React.Component {
                         <li className={'delete_button'}><button onClick={this.delete}>Delete</button></li> : null}
                 </ul>
                 {this.state.mail.list.length ?
-                <ul className={'mail_list'}>
-                    <ul className={'mail_list_header'}><li>
-                        <input type={'checkbox'}
+                <ul className={'mail_box'}>
+                    <li><ul className={'mail_list_header'}>
+                        <li><input type={'checkbox'}
                            checked={this.state.mail.list.every(element => this.state.mail.selected.includes(element))}
                            onChange={(event) => {
                                let mail = this.state.mail
@@ -290,8 +293,7 @@ export default class MailList extends React.Component {
                                    mail.selected = []
                                }
                                this.setState({mail: mail})
-                        }} />
-                        </li><li></li><li></li>
+                        }} /></li><li></li><li></li>
                         <li>Sender <span onClick={this.sort}>
                             {this.state.sort.field === 'sender' ? this.state.sort.invert ? <>▴</> : <>▾</> : <>▾</>}
                         </span></li>
@@ -304,8 +306,8 @@ export default class MailList extends React.Component {
                         <li className={'letter_date'}>Date <span onClick={this.sort}>
                             {this.state.sort.field === 'date' ? this.state.sort.invert ? <>▴</> : <>▾</> : <>▾</>}
                         </span></li>
-                    </ul>
-                    {this.state.mail.list.map(
+                    </ul></li>
+                    <li className={'mail_list'}><ul>{this.state.mail.list.map(
                         letter => <li key={letter._id}>
                             <ul className={localStorage.username !== letter.recipient.username ?
                                 'mail_list_letter' : letter.checked ? 'mail_list_letter' : 'mail_list_letter unchecked'} onClick={() => {
@@ -347,7 +349,7 @@ export default class MailList extends React.Component {
                                 <li className={'letter_date'}>{new Date(letter.sending_time).toLocaleString()}</li>
                             </ul>
                         </li>
-                    )}
+                    )}</ul></li>
                 </ul> : <span>No emails yet</span>}
             </div>
         )

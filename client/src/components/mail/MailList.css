@@ -10,28 +10,48 @@ ul {
     align-items: flex-start;
 }
 
-.mail_list {
+.mail_box {
     width: 100%;
     display: grid;
     grid-row-gap: 10px;
 }
 
-.mail_list_letter, .mail_list_header {
+.mail_list {
+    max-height: 390px;
+}
+
+.mail_list ul {
+    height: 100%;
     width: 100%;
+    display: grid;
+    grid-row-gap: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.mail_list_letter, .mail_list_header {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr 3fr 3fr repeat(4, 7fr);
     align-items: center;
     border-radius: 12px;
-    padding: 10px;
 }
 
 .mail_list_letter {
-    background: rgba(155, 155, 155, 0.5);
+    background: rgb(41, 48, 74);
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.mail_list_letter:hover {
+    background: rgb(29, 33, 53);
     cursor: pointer;
 }
 
 .mail_list_letter.unchecked {
-    background: rgba(100, 100, 100, 0.5);
+    background: rgb(21, 27, 65);
     font-weight: bold;
 }
 
@@ -75,6 +95,7 @@ ul {
     overflow-y: auto;
     max-height: 65vh;
     margin-top: 20px;
+    font-family: 'SF UI Text', serif;
 }
 
 .mail_create_form {

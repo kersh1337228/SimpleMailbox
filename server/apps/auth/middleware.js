@@ -13,6 +13,6 @@ export default function authMiddleware(request, response, next) {
         next()
     } catch (error) {
         console.log(error)
-        response.status(400).json('TokenError')
+        response.status(401).json('TokenError')
     }
 }

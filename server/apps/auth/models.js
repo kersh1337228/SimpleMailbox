@@ -36,7 +36,10 @@ User.methods.get_emails = async function(filter='all') {
             emails = emails.filter(email => email.sender.equals(this._id))
             break
     }
-    return emails
+    return emails.sort((a, b) => {
+        return new Date(a.sending_time) < new Date(b.sending_time) ?
+            1 : new Date(a.sending_time) > new Date(b.sending_time) ? -1 : 0
+    })
 }
 
 

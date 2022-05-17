@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 
 export default class Login extends React.Component {
@@ -32,21 +33,23 @@ export default class Login extends React.Component {
 
     render() {
         return(
-            <form onSubmit={this.login}>
-                {this.state.errors.username ? <ul>
+            <form onSubmit={this.login} className={'sign_form'}>
+                {this.state.errors.username ? <ul className={'errors_list'}>
                     {this.state.errors.username.map(
                         error => <li key={error}>{error}</li>
                     )}
                 </ul> : null}
                 <input required type={'text'} name={'username'} placeholder={'Username'}/>
-                {this.state.errors.password ? <ul>
+                {this.state.errors.password ? <ul className={'errors_list'}>
                     {this.state.errors.password.map(
                         error => <li key={error}>{error}</li>
                     )}
                 </ul> : null}
                 <input required type={'password'} name={'password'} placeholder={'Password'}/>
                 <button type={'submit'}>Sign in</button>
-                <span>Do not have an account? <a href={'/register'}>Sign up</a></span>
+                <span>Do not have an account?
+                    <Link to={'/register'} className={'relocate_link'}> Sign up</Link>
+                </span>
             </form>
         )
     }

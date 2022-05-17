@@ -1,0 +1,93 @@
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+    border-radius: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 7px;
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+@font-face {
+    font-family: 'SF UI Display';
+    src: local('SFUIDisplay-Regular.eot'), url(../../static/SanFranciscoFont/SFUIDisplay-Regular.eot) format('eot');
+    src: local('SF UI Display Regular'), local('SFUIDisplay-Regular'),
+    url(../../static/SanFranciscoFont/SFUIDisplay-Regular.eot?#iefix) format('embedded-opentype'),
+    url(../../static/SanFranciscoFont/SFUIDisplay-Regular.woff) format('woff'),
+    url(../../static/SanFranciscoFont/SFUIDisplay-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'SF UI Text';
+    src: local('SFUIText-Regular.eot'), url(../../static/SanFranciscoFont/SFUIText-Regular.eot) format('eot');
+    src: local('SF UI Text Regular'), local('SFUIText-Regular'),
+    url(../../static/SanFranciscoFont/SFUIText-Regular.eot?#iefix) format('embedded-opentype'),
+    url(../../static/SanFranciscoFont/SFUIText-Regular.woff) format('woff'),
+    url(../../static/SanFranciscoFont/SFUIText-Regular.ttf) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+}
+
+button, input, textarea {
+    font-family: 'SF UI Display', serif;
+}
+
+input, textarea {
+    padding: 10px;
+    border-radius: 7px;
+    border: solid 1px;
+    outline: none;
+}
+
+textarea {
+    resize: none;
+}
+
+button {
+    border-radius: 27px;
+    border: none;
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: rgb(150, 150, 150);
+}
+
+#content_wrapper {
+    height: calc(100vh - 100px);
+    width: 100vw;
+    background: rgb(19, 21, 33);
+    color: white;
+    font-family: 'SF UI Display', serif;
+    top: 0;
+    left: 0;
+}
+
+#content {
+    height: calc(100% - 150px);
+    width: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 50px;
+}
+

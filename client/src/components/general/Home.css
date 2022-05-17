@@ -1,0 +1,16 @@
+.home_component {
+    font-size: 40px;
+    margin-left: -30vw;
+}
+
+.home_component h5 {
+    margin-top: 100px;
+    font-family: 'SF UI Text', serif;
+    font-size: 25px;
+}
+
+.home_component ul {
+    margin-top: 20px;
+    font-family: 'SF UI Text', serif;
+    font-size: 25px;
+}

@@ -1,4 +1,6 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
+import './Register.css'
 
 
 export default class Register extends React.Component {
@@ -30,34 +32,40 @@ export default class Register extends React.Component {
 
     render() {
         return(
-            <form onSubmit={this.register}>
-                {this.state.errors.username ? <ul>
+            <form onSubmit={this.register} className={'sign_form'}>
+                {this.state.errors.username ? <ul className={'errors_list'}>
                     {this.state.errors.username.map(
                         error => <li key={error}>{error}</li>
                     )}
                 </ul> : null}
                 <input required type={'text'} name={'username'} placeholder={'Username'}/>
-                {this.state.errors.password ? <ul>
+                {this.state.errors.password ? <ul className={'errors_list'}>
                     {this.state.errors.password.map(
                         error => <li key={error}>{error}</li>
                     )}
                 </ul> : null}
-                <input required type={'password'} name={'password'} placeholder={'Password'}/>
-                {this.state.errors.password_repeat ? <ul>
+                <input required type={'password'} name={'password'} placeholder={'Password'} onChange={event => {
+                    if (!event.target.value) {
+                        this.setState({errors: {password_repeat: null}})
+                    }
+                }}/>
+                {this.state.errors.password_repeat ? <ul className={'errors_list'}>
                     {this.state.errors.password_repeat.map(
                         error => <li key={error}>{error}</li>
                     )}
                 </ul> : null}
                 <input required type={'password'} name={'password_repeat'} placeholder={'Repeat the password'}
-                       onChange={(event) => {
+                       onChange={event => {
                            if (event.target.value !== event.target.parentElement.children.password.value) {
                                this.setState({errors: {password_repeat: ['Passwords do not match']}})
                            } else {
-                               this.setState({errors: {password_repeat: []}})
+                               this.setState({errors: {password_repeat: null}})
                            }
                        }}/>
                 <button type={'submit'}>Sign up</button>
-                <span>Already have an account? <a href={'/login'}>Sign in</a></span>
+                <span>Already have an account?
+                    <Link to={'/login'} className={'relocate_link'}> Sign in</Link>
+                </span>
             </form>
         )
     }
