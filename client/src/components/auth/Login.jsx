@@ -32,6 +32,10 @@ export default class Login extends React.Component {
         }
     }
 
+    componentDidMount() {
+        document.title = 'Sign in'
+    }
+
     render() {
         return(
             <form onSubmit={this.login} className={'sign_form'}>

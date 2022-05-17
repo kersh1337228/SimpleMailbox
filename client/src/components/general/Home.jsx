@@ -4,6 +4,7 @@ import './Home.css'
 
 // Fancy homepage component
 export default function Home() {
+    document.title = 'Home'
     return(
         <div className={'home_component'}>
             <h1>Rediscover email for yourself</h1>

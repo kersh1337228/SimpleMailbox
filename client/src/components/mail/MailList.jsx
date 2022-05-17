@@ -44,6 +44,7 @@ export default class MailList extends React.Component {
     }
 
     async componentDidMount() {  // Initial request (all mail list)
+        document.title = 'Mail'
         const request = await fetch('http://localhost:5000/mail/list', {
             method: 'GET',
             headers: {

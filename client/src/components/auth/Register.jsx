@@ -31,6 +31,10 @@ export default class Register extends React.Component {
         }
     }
 
+    componentDidMount() {
+        document.title = 'Sign up'
+    }
+
     render() {
         return(
             <form onSubmit={this.register} className={'sign_form'}>
