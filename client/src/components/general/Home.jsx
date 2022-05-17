@@ -2,6 +2,7 @@ import React from 'react'
 import './Home.css'
 
 
+// Fancy homepage component
 export default function Home() {
     return(
         <div className={'home_component'}>
@@ -9,9 +10,9 @@ export default function Home() {
             <div>Check this out right now</div>
             <h5>Why should you try it?</h5>
             <ul>
-                <li>- Quick start</li>
-                <li>- Only the essentials</li>
-                <li>- Moder user interface</li>
+                <li>- Quick start and easy to use</li>
+                <li>- No unnecessary functions</li>
+                <li>- Modern minimalistic user interface</li>
             </ul>
         </div>
     )

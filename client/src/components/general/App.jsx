@@ -8,8 +8,9 @@ import Home from './Home'
 import './App.css'
 
 
+// Main client app component (general composition)
 export default function App() {
-    if (localStorage.getItem('token')) {
+    if (localStorage.getItem('token')) { // Authorized user page list
         return(
             <BrowserRouter>
                 <Header />
@@ -24,7 +25,7 @@ export default function App() {
                 </div>
             </BrowserRouter>
         )
-    } else {
+    } else {  // Unauthorized user page list
         return(
             <BrowserRouter>
                 <Header />

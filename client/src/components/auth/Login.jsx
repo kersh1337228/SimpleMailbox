@@ -2,29 +2,30 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 
 
+// Sign in form and login request method
 export default class Login extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            errors: {}
-        }
+            errors: {}  // form errors
+        }  // method binding
         this.login = this.login.bind(this)
     }
 
-    async login(event) {
-        event.preventDefault()
+    async login(event) {  // login request
+        event.preventDefault()  // preventing automatic form sending
         const request = await fetch('http://localhost:5000/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-            },
+            },  // form data serialization
             body: JSON.stringify(Object.fromEntries((new FormData(event.target)).entries()))
         })
         const response = await request.json()
         if (!request.ok) {
             this.setState({errors: response.errors})
-        } else {
+        } else {  // Signing in
             localStorage.setItem('token', response.token)
             localStorage.setItem('username', response.username)
             window.location.reload()

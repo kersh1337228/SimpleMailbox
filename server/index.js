@@ -5,6 +5,7 @@ import authRouter from './apps/auth/routes.js'
 import mailRouter from './apps/mail/routers.js'
 
 
+// Configuration variables
 const PORT = process.env.PORT || 5000
 const app = express()
 
@@ -20,8 +21,8 @@ app.use('/auth', authRouter)
 app.use('/mail', mailRouter)
 
 
-const init = async () => {
-    try {
+const init = async () => {  // Server initialization method
+    try {  // Trying to connect to mongo database
         await mongoose.connect(
             'mongodb+srv://user:123@cluster0.e5tre.mongodb.net/simplemailbox',
             {}

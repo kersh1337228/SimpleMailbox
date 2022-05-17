@@ -3,29 +3,30 @@ import {Link} from 'react-router-dom'
 import './Register.css'
 
 
+// Sign up form and register request method
 export default class Register extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            errors: {}
-        }
+            errors: {}  // form errors
+        }  // method binding
         this.register = this.register.bind(this)
     }
 
-    async register(event) {
-        event.preventDefault()
+    async register(event) {  // register request
+        event.preventDefault()  // preventing automatic form sending
         const request = await fetch('http://localhost:5000/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            },
+            },  // form data serialization
             body: JSON.stringify(Object.fromEntries((new FormData(event.target)).entries()))
         })
         const response = await request.json()
         if (!request.ok) {
             this.setState({errors: response.errors})
-        } else {
+        } else {  // redirecting to sign in form page
             window.location.href = '/login'
         }
     }

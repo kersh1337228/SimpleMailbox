@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 
+// Generates JSON web token for user authorization
 function generateAccessToken(username, id) {
     const payload = {username, id}
     return jwt.sign(
@@ -13,26 +14,26 @@ function generateAccessToken(username, id) {
 }
 
 
-export default class authAPIController {
-    // Trying to get user instance by data sent
-    static async login(request, response) {
+export default class authAPIController {  // Authentication application controller
+    // Trying to get User model instance by data sent
+    static async login(request, response) {  // POST
         try {
             const {username, password} = request.body
             const user = await User.findOne({username: username})
-            if (!user) {
+            if (!user) {  // User exists validation
                 return response.status(400).json({
                     errors: {
                         username: ['No user with such username found']
                     }
                 })
-            }
+            }  // Wrong password validation
             if (!bcrypt.compareSync(password, user.password)) {
                 return response.status(400).json({
                     errors: {
                         password: ['Wrong password']
                     }
                 })
-            }
+            }  // Sending back jwt token generated and username
             return response.status(200).json({
                 token: generateAccessToken(user.username, user._id),
                 username: user.username,
@@ -44,18 +45,20 @@ export default class authAPIController {
             })
         }
     }
-    // Creating new user instance
-    static async register(request, response) {
+    // Creating new User model instance
+    static async register(request, response) {  // POST
         try {
             const {username, password} = request.body
             const user = new User({
                 username: username,
+                // Storing password's hash (Blowfish cipher)
                 password: bcrypt.hashSync(password, 3),
             })
             await user.save()
             return response.status(201).json('Registered')
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
+            // Username uniqueness requirement validation
             if (error.message.includes('E11000 duplicate key error collection:')) {
                 return response.status(400).json({
                     errors: {
@@ -69,8 +72,8 @@ export default class authAPIController {
             }
         }
     }
-    // Deleting current user account
-    static async delete(request, response) {
+    // Deleting User model instance
+    static async delete(request, response) {  // DELETE
         try {
             await User.findByIdAndDelete(request.user.id)
             return response.status(200).json('Deleted')

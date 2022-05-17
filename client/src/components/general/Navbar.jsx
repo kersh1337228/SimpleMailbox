@@ -3,6 +3,7 @@ import {NavLink} from 'react-router-dom'
 import './Navbar.css'
 
 
+// Navigation bar used in Header component
 const Navbar = (props) => {
     return(
         <nav><ul>

@@ -6,7 +6,7 @@ import mailApiController from './controllers.js'
 const router = new Router()
 
 
-// Applying authentication middleware to restrict access
+// Applying authentication middleware to restrict unauthorized access
 router.use(authMiddleware)
 
 // Mail pages

@@ -3,16 +3,19 @@ import Modal from '../mail/Modal'
 import './Account.css'
 
 
+// Account component indicates current user signed in
+// and provides user sign out and delete methods
 export default class Account extends React.Component{
     constructor(props) {
         super(props)
+        // Methods binding
         this.setActive = this.setActive.bind(this)
         this.account_delete = this.account_delete.bind(this)
         this.delete_confirm = this.delete_confirm.bind(this)
         this.delete_cancel = this.delete_cancel.bind(this)
         this.state = {
-            active: false,
-            deleteButton: (
+            active: false,  // Modal window active
+            deleteButton: (  // Delete account button default value
                 <button className={'account_delete'} onClick={this.account_delete}>
                     Delete an account
                 </button>
@@ -20,10 +23,10 @@ export default class Account extends React.Component{
         }
     }
 
-    setActive(value) {
-        if (value) {
+    setActive(value) {  // Open modal window
+        if (value) {  // Open
             this.setState({active: value})
-        } else {
+        } else {  // Close and set delete button by default
             this.setState({active: value, deleteButton: (
                 <button className={'account_delete'} onClick={this.account_delete}>
                     Delete an account
@@ -32,7 +35,7 @@ export default class Account extends React.Component{
         }
     }
 
-    account_delete() {
+    account_delete() {  // Show delete request button
         this.setState({deleteButton: (
             <div className={'account_delete_solution'}>
                 <button onClick={this.delete_cancel} className={'account_delete_cancel'}>
@@ -45,7 +48,7 @@ export default class Account extends React.Component{
         )})
     }
 
-    async delete_confirm() {
+    async delete_confirm() {  // User delete method
         const request = await fetch(`http://localhost:5000/auth/delete`, {
             method: 'DELETE',
             headers: {
@@ -62,13 +65,13 @@ export default class Account extends React.Component{
             } else {
                 this.setState({errors: response.errors})
             }
-        } else {
+        } else { // Signing out
             localStorage.clear()
             window.location.reload()
         }
     }
 
-    delete_cancel() {
+    delete_cancel() {  // Restores default delete button state
         this.setState({deleteButton: (
             <button className={'account_delete'} onClick={this.account_delete}>
                 Delete an account
@@ -77,7 +80,7 @@ export default class Account extends React.Component{
     }
 
     render() {
-        const username = localStorage.getItem('username')
+        const username = localStorage.getItem('username')  // jwt token verified username
         return(
             <div className={'account'}>
                 <div onClick={() => {this.setActive(true)}} className={'account_nav'}>

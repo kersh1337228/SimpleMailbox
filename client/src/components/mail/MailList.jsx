@@ -3,23 +3,26 @@ import Modal from './Modal'
 import './MailList.css'
 
 
+// Email list component containing send, delete, check,
+// forward, reply, filter and sort methods
 export default class MailList extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            mail: {
-                list: [],
-                selected: []
+            mail: { // Current user's email list
+                list: [],  // All
+                selected: [] // Checkbox-selected
             },
-            sort: {
+            sort: { // Email list sort information
                 field: 'date',
                 invert: false,
             },
-            modalActive: false,
-            modalContent: null,
-            text: '',
-            errors: {},
+            modalActive: false,  // Modal window active state
+            modalContent: null,  // Modal window content
+            text: '',  // Form textarea tag text default value
+            errors: {},  // Form errors
         }
+        // Form textarea tag reference (forward and reply autofill)
         this.textArea = React.createRef()
         // Methods binding
         this.unsetActive = this.unsetActive.bind(this)
@@ -32,15 +35,15 @@ export default class MailList extends React.Component {
         this.sort = this.sort.bind(this)
     }
 
-    unsetActive(value) {
-        try {
+    unsetActive(value) { // Modal window setState
+        try {  // Trying to get form textArea current value
             this.setState({modalActive: value, text: this.textArea.current.value})
         } catch (error) {
             this.setState({modalActive: value})
         }
     }
 
-    async componentDidMount() {
+    async componentDidMount() {  // Initial request (all mail list)
         const request = await fetch('http://localhost:5000/mail/list', {
             method: 'GET',
             headers: {
@@ -50,7 +53,7 @@ export default class MailList extends React.Component {
             },
         })
         const response = await request.json()
-        if (!request.ok) {
+        if (!request.ok) {  // Signing out
             if (response === 'TokenError') {
                 localStorage.clear()
                 window.location.reload()
@@ -58,28 +61,28 @@ export default class MailList extends React.Component {
                 this.setState({errors: response.errors})
             }
         } else {
-            try {
+            try {  // Textarea initial size correction
                 this.textArea.current.style.height = (this.textArea.current.scrollHeight * 0.95) + 'px';
-            } catch (error) {}
+            } catch (error) {}  // Setting mail list requested
             let mail = this.state.mail
             mail.list = response
             this.setState({mail})
         }
     }
 
-    async sendEmail(event) {
-        event.preventDefault()
+    async sendEmail(event) {  // email sending request
+        event.preventDefault()  // preventing form from automatic sending
         const request = await fetch('http://localhost:5000/mail/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
+            },  // form data serialization
             body: JSON.stringify(Object.fromEntries((new FormData(event.target)).entries()))
         })
         const response = await request.json()
-        if (!request.ok) {
+        if (!request.ok) {  // signing out
             if (response === 'TokenError') {
                 localStorage.clear()
             } else {
@@ -90,32 +93,33 @@ export default class MailList extends React.Component {
         }
     }
 
-    async delete() {
+    async delete() {  // deleting all emails selected (delete request)
         const request = await fetch(`http://localhost:5000/mail/delete`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
+            },  // emails with checkbox checked
             body: JSON.stringify(this.state.mail.selected)
         })
         const response = await request.json()
-        if (!request.ok) {
+        if (!request.ok) {  // signing out
             if (response === 'TokenError') {
                 localStorage.clear()
                 window.location.reload()
             } else {
                 this.setState({errors: response.errors})
             }
-        } else {
+        } else {  // refreshing email list
             let mail = this.state.mail
-            mail.list = response
+            mail.list = mail.list.filter(email => !mail.selected.includes(email))
+            mail.selected = []
             this.setState({mail})
         }
     }
 
-    async check(letter, callback) {
+    async check(letter, callback) {  // viewing letter unseen
         if (!letter.checked) {
             const request = await fetch(`http://localhost:5000/mail/check`, {
                 method: 'PATCH',
@@ -123,18 +127,18 @@ export default class MailList extends React.Component {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
+                },  // letter serialization
                 body: JSON.stringify(letter)
             })
             const response = await request.json()
-            if (!request.ok) {
+            if (!request.ok) {  // signing out
                 if (response === 'TokenError') {
                     localStorage.clear()
                     window.location.reload()
                 } else {
                     this.setState({errors: response.errors})
                 }
-            } else {
+            } else {  // refreshing check data
                 let mail = this.state.mail
                 mail.list[mail.list.indexOf(letter)].checked = true
                 try {mail.selected[mail.selected.indexOf(letter)].checked = true} catch (error) {}
@@ -143,9 +147,9 @@ export default class MailList extends React.Component {
         } else callback()
     }
 
-    forward(letter) {
+    forward(letter) {  // creates forward email structure (text)
         const text = `Forwarded email\n\nFrom:   ${letter.sender.username}\nTo:     ${letter.recipient.username}\nTitle:  ${letter.title}\nDate:   ${new Date(letter.sending_time).toLocaleString()}\n\n${letter.text}`
-        this.setState({text: null}, () => {
+        this.setState({text: null}, () => {  // form textarea size correction
             this.setState({text: text, modalActive: true, modalContent: null}, () => {
                 const event = document.createEvent('HTMLEvents')
                 event.initEvent('input', true, true)
@@ -154,9 +158,9 @@ export default class MailList extends React.Component {
         })
     }
 
-    reply(letter) {
+    reply(letter) {  // creates reply email structure (recipient, text)
         const text = `Reply to email\n\nFrom:   ${letter.sender.username}\nTo:     ${letter.recipient.username}\nTitle:  ${letter.title}\nDate:   ${new Date(letter.sending_time).toLocaleString()}\n\n`
-        this.setState({text: null}, () => {
+        this.setState({text: null}, () => {  // form textarea size correction
             this.setState({text: text, modalActive: true, modalContent: null}, () => {
                 const event = document.createEvent('HTMLEvents')
                 event.initEvent('input', true, true)
@@ -166,7 +170,7 @@ export default class MailList extends React.Component {
         })
     }
 
-    async filter(event) {
+    async filter(event) {  // filtering message list (all|received|sent)
         const request = await fetch(`http://localhost:5000/mail/list/${event.target.value}`, {
             method: 'GET',
             headers: {
@@ -176,25 +180,25 @@ export default class MailList extends React.Component {
             },
         })
         const response = await request.json()
-        if (!request.ok) {
+        if (!request.ok) {  // signing out
             if (response === 'TokenError') {
                 localStorage.clear()
                 window.location.reload()
             } else {
                 this.setState({errors: response.errors})
             }
-        } else {
+        } else {  // refreshing email list
             let mail = this.state.mail
             mail.list = response
             this.setState({mail})
         }
     }
 
-    sort(event) {
+    sort(event) {  // sorting message list based on sort field chosen and invert state
         const parameter = event.target.parentElement.innerHTML.split(' ')[0].toLowerCase()
         let [state, sortCallback] = [this.state, () => {}]
         switch (parameter) {
-            case 'date':
+            case 'date':  // date field sort
                 sortCallback = (a, b) => {
                     if (state.sort.invert) {
                         return new Date(a.sending_time) < new Date(b.sending_time) ?
@@ -205,7 +209,7 @@ export default class MailList extends React.Component {
                     }
                 }
                 break
-            case 'title':
+            case 'title':  // title field sort
                 sortCallback = (a, b) => {
                     if (state.sort.invert) {
                         return a.title < b.title ? 1 : a.title > b.title ? -1 : 0
@@ -215,7 +219,7 @@ export default class MailList extends React.Component {
                 }
                 break
             default:
-                sortCallback = (a, b) => {
+                sortCallback = (a, b) => {  // sender|recipient field sort
                     if (state.sort.invert) {
                         return a[parameter].username < b[parameter].username ?
                             1 : a[parameter].username > b[parameter].username ? -1 : 0
@@ -226,14 +230,14 @@ export default class MailList extends React.Component {
                 }
         }
         state.mail.list = state.mail.list.sort(sortCallback)
-        state.sort = {
+        state.sort = {  // applying changes
             field: parameter,
             invert: !state.sort.invert
         }
         this.setState(state)
     }
 
-    textSize(event) {
+    textSize(event) {  // automatic textarea size correction
         event.target.style.height = 'auto';
         event.target.style.height = (event.target.scrollHeight * 0.95) + 'px';
     }

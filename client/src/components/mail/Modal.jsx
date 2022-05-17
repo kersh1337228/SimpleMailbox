@@ -2,11 +2,12 @@ import React from 'react'
 import './Modal.css'
 
 
+// Modal window (popup) component (container)
 export default class Modal extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            active: props.active,
+            active: props.active,  // window active state
         }
     }
     render() {

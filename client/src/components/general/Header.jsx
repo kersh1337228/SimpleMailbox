@@ -4,8 +4,9 @@ import Account from '../auth/Account'
 import './Header.css'
 
 
+// Header component containing navigation bar and fancy background
 export default function Header() {
-    if (localStorage.getItem('token')) {
+    if (localStorage.getItem('token')) { // Authorized user pages list
         const tabs = [
             {
                 name: 'Home',
@@ -23,7 +24,7 @@ export default function Header() {
                 </Navbar>
             </header>
         )
-    } else {
+    } else {  // Unauthorized user pages list
         const tabs = [
             {
                 name: 'Home',

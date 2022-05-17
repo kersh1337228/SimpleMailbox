@@ -3,8 +3,9 @@ import Email from './models.js'
 import User from '../auth/models.js'
 
 
-export default class mailApiController {
-    static async list(request, response) {
+export default class mailApiController {  // Email application controller
+    // Returns list of all user emails (both sent and received)
+    static async list(request, response) {  // GET
         try {
             const user = await User.findOne({username: request.user.username})
             response.status(200).json(await user.get_emails())
@@ -15,8 +16,8 @@ export default class mailApiController {
             })
         }
     }
-
-    static async list_filtered(request, response) {
+    // Returns list of user emails depending on filter option provided
+    static async list_filtered(request, response) {  // GET
         try {
             const user = await User.findOne({username: request.user.username})
             const emails = await user.get_emails(request.params.filter)
@@ -28,19 +29,19 @@ export default class mailApiController {
             })
         }
     }
-
-    static async create(request, response) {
+    // Creating new Email model instance
+    static async create(request, response) {  // POST
         try {
             const {recipient_username, title, text} = request.body
             const sender = await User.findOne({username: request.user.username})
             const recipient = await User.findOne({username: recipient_username})
-            if (!recipient) {
+            if (!recipient) {  // Validating recipient data
                 return response.status(400).json({
                     errors: {
                         recipient: ['No recipient with such name found']
                     }
                 })
-            }
+            }  // No same email user and recipient validation
             if (sender._id === recipient._id) {
                 return response.status(400).json({
                     errors: {
@@ -55,9 +56,12 @@ export default class mailApiController {
                 text: text,
             })
             await email.save(async (error, savedEmail) => {
+                // Adding newly created email to both
+                // sender's and recipient's email lists
                 sender.emails.push(savedEmail)
-                await sender.save()
                 recipient.emails.push(savedEmail)
+                // Applying changes
+                await sender.save()
                 await recipient.save()
             })
             return response.status(201).json(email)
@@ -68,13 +72,16 @@ export default class mailApiController {
             })
         }
     }
-
-    static async delete(request, response) {
+    // Deleting email from user list
+    static async delete(request, response) {  // DELETE
         try {
             const user = await User.findOne({username: request.user.username})
             const emails = request.body
+            // Deleting email requested from user's email list
             user.emails = user.emails.filter(email => !(emails.map(email => email._id)).includes(email.valueOf()))
             await user.save(async () => {
+                // If no user store email requested then
+                // deleting Email model instance
                 await Email.check_consistency()
             })
             response.status(200).json(await user.get_emails())
@@ -85,11 +92,12 @@ export default class mailApiController {
             })
         }
     }
-
-    static async check(request, response) {
+    // Viewing newly sent email by recipient (checking)
+    static async check(request, response) {  // PATCH
         try {
             const user = await User.findOne({username: request.user.username})
             const email = await Email.findById(request.body._id)
+            // Sender can not check the letter validation
             if (!user._id.equals(new mongoose.Types.ObjectId(request.body.sender._id))) {
                 email.checked = true
                 await email.save()
