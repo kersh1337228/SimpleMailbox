@@ -249,7 +249,7 @@ export default class MailList extends React.Component {
                 <Modal active={this.state.modalActive} unsetActive={this.unsetActive}>
                     {this.state.modalContent ? this.state.modalContent :
                         <form onSubmit={this.sendEmail} className={'mail_create_form'}>
-                            {this.state.errors.recipient ? <ul>
+                            {this.state.errors.recipient ? <ul className={'errors_list'}>
                                 {this.state.errors.recipient.map(
                                     error => <li key={error}>{error}</li>
                                 )}

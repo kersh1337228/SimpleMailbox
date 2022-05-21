@@ -42,7 +42,7 @@ export default class mailApiController {  // Email application controller
                     }
                 })
             }  // No same email user and recipient validation
-            if (sender._id === recipient._id) {
+            if (sender.username === recipient.username) {
                 return response.status(400).json({
                     errors: {
                         recipient: ['You can not send emails to yourself']
